@@ -1,0 +1,24 @@
+{
+  "name": "openapi-trpc",
+  "bin": "src/bin.js",
+  "scripts": {
+	"start": "bun src/bin.js"
+  },
+  "dependencies": {
+	"@apidevtools/swagger-parser": "^10.1.0",
+	"@openapi-contrib/openapi-schema-to-json-schema": "3.3.2",
+	"@rometools/js-api": "^0.3.0",
+	"@rometools/wasm-nodejs": "^12.1.3",
+	"commander": "^11.0.0",
+	"enquirer": "^2.3.6",
+	"hygen": "^6.2.11",
+	"json-schema-to-zod": "^1.1.1",
+	"openapi-zod-client": "^1.9.0"
+},
+  "devDependencies": {
+    "bun-types": "latest"
+  },
+  "peerDependencies": {
+    
+  }
+}

@@ -1,0 +1,42 @@
+{
+	"linter": {
+		"enabled": true,
+		"rules": {
+			"all": true,
+			"nursery": {
+				"recommended": true
+			},
+			"complexity": {
+				"recommended": true
+			},
+			"correctness": {
+				"all": true,
+				"noUnusedVariables": "warn"
+			},
+			"security": {
+				"recommended": true,
+				"noDangerouslySetInnerHtml": "warn"
+			},
+			"style": {
+				"recommended": true,
+				"noImplicitBoolean": "off"
+			},
+			"suspicious": {
+				"recommended": true,
+				"noPrototypeBuiltins": "warn"
+			}
+		},
+		"ignore": [
+			".husky",
+			"node_modules"
+		]
+	},
+	"formatter": {
+		"indentSize": 4,
+		"lineWidth": 150,
+		"ignore": [
+			".husky",
+			"node_modules"
+		]
+	}
+}

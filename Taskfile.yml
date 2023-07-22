@@ -1,0 +1,11 @@
+version: 3
+
+tasks:
+    default:
+        desc: List all tasks
+        cmds:
+            - task --list-all
+
+    install:
+        cmds:
+            - bun install
