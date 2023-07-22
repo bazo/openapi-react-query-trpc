@@ -12,10 +12,11 @@ program
 	.description("API Client generator")
 	.version("0.8.0")
 	.argument("<openapi-schema-json>", "path to open api schema")
+	.argument("<output-dir>", "where to save the client")
 	.requiredOption("-n, --name <name>", "client class name")
-	.action(async (file) => {
+	.action(async (file, outDir) => {
 		console.log("generating client...");
-		const res = await runRunner(file);
+		const res = await runRunner(file, outDir);
 		// if (res.success) {
 		// 	const rome = await Rome.create({
 		// 		distribution: Distribution.NODE, // Or BUNDLER / WEB depending on the distribution package you've installed
@@ -36,12 +37,11 @@ program
 
 program.parse(process.argv);
 
-process.env["HYGEN_OVERWRITE"] = 1;
+process.env.HYGEN_OVERWRITE = 1;
 
-function runRunner(file) {
-	return runner(["client", "new", "--file", file, "--className", program.opts().name], {
+function runRunner(file, outDir) {
+	return runner(["client", "new", "--file", file, "--outDir", outDir, "--className", program.opts().name], {
 		templates: defaultTemplates,
-		//cwd: process.cwd(),
 		cwd: __dirname,
 		logger: new Logger.default(console.log.bind(console)),
 		createPrompter: () => require("enquirer"),

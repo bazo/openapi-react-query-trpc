@@ -1,5 +1,5 @@
 ---
-to: <%= dir %>/src/libs/apiClient.ts
+to: <%= outDir %>
 ---
 import wretch, {WretchError} from "wretch";
 import QueryStringAddon from "wretch/addons/queryString";

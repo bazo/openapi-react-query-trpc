@@ -1,6 +1,6 @@
 module.exports = {
 	upgrade: true,
-	reject: ["@openapi-contrib/openapi-schema-to-json-schema"],
+	reject: [],
 	root: true,
 	//workspaces: true
 };

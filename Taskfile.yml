@@ -9,3 +9,17 @@ tasks:
     install:
         cmds:
             - bun install
+
+    clean:
+        cmds:
+            - bun del dist/*.ts
+            - rm -rf node_modules
+
+    fixtures:
+        cmds:
+            - curl -o fixtures/api.json https://raw.githubusercontent.com/OAI/OpenAPI-Specification/main/examples/v2.0/json/petstore.json
+            - bun rome format --write fixtures/api.json
+
+    run:
+        cmds:
+            - bun start

@@ -1,4 +1,3 @@
-const toJsonSchema = require("@openapi-contrib/openapi-schema-to-json-schema");
 const { parseSchema } = require("json-schema-to-zod");
 const SwaggerParser = require("@apidevtools/swagger-parser");
 const { generateZodClientFromOpenAPI } = require("openapi-zod-client");
@@ -27,7 +26,7 @@ function handleContent(content) {
 
 	let validation = null;
 	if (schema.type === "array") {
-		const ref = schema.items["$ref"];
+		const ref = schema.items.$ref;
 
 		if (ref) {
 			if (ref.properties) {
@@ -41,7 +40,7 @@ function handleContent(content) {
 
 		isArray = true;
 	} else {
-		const ref = schema["$ref"];
+		const ref = schema.$ref;
 		if (ref) {
 			if (ref.properties) {
 				validation = handleRef(ref);
@@ -54,70 +53,6 @@ function handleContent(content) {
 	}
 
 	return { contentType, model, isArray, validation };
-}
-
-const processedSchemas = {};
-
-function hasRefInProps(properties) {
-	console.log({ properties });
-	for (const [propName, propData] of Object.entries(properties)) {
-		//Object.entries(schema.properties).forEach(([propName, propData]) => {
-		//console.dir({propName, propData})
-
-		if (propData["$ref"]) {
-			return true;
-		}
-
-		if (propData["type"] && propData["type"] === "array") {
-			if (propData["items"]["$ref"]) {
-				return true;
-			}
-		}
-	} //)
-
-	return false;
-}
-
-function processSchemaWithoutRef(name, schema) {
-	if (!processedSchemas[name]) {
-		const convertedSchema = toJsonSchema(schema);
-		const parsed = parseSchema(convertedSchema);
-
-		processedSchemas[name] = parsed;
-	}
-}
-
-function processSchemaWithRef(name, schema, schemas) {
-	Object.entries(schema.properties).forEach(([propName, propData]) => {
-		const properties = { [propName]: propData };
-
-		if (hasRefInProps({ properties })) {
-			console.log("there are nested refs");
-		} else {
-			console.log("there are no nested refs");
-			console.dir({ propName, propData });
-		}
-	});
-}
-
-function processSchema(name, schema, schemas) {
-	if (hasRefInProps(schema.properties)) {
-		console.log("there are refs");
-
-		processSchemaWithRef(name, schema, schemas);
-	} else {
-		//console.log("schema has no refs");
-		processSchemaWithoutRef(name, schema);
-	}
-}
-
-//sort schemas - schemas without any refs first
-function sortSchemas(schemas) {
-	Object.entries(schemas).forEach(([name, schema]) => {
-		//console.dir({name, schema: schema.properties}, {depth: null})
-
-		processSchema(name, schema, schemas);
-	});
 }
 
 function removePassthrough(text) {
@@ -136,7 +71,7 @@ function findOpSchema(method, path, schemas) {
 	if (path.indexOf("{") > 0) {
 		const matches = path.match(/{\w+}/g);
 		matches.forEach((match) => {
-			const replace = ":" + match.replace("{", "").replace("}", "");
+			const replace = `:${match.replace("{", "").replace("}", "")}`;
 			lookupPath = lookupPath.replace(match, replace);
 		});
 	}
@@ -147,38 +82,7 @@ function findOpSchema(method, path, schemas) {
 async function schemaParse(schema) {
 	const models = {};
 
-	// const convertedSchema = toJsonSchema(schema, {
-
-	// });
-
-	// console.dir(convertedSchema.components.schemas, {depth: null});
-	// process.exit()
-
-	//sortSchemas(schema.components?.schemas || {});
-
-	//process.exit();
-	// Object.entries(schema.components?.schemas || {}).forEach(([name, schema]) => {
-	// 	if (name === "CountryData") {
-	// 		console.log({ name, schema: schema.properties.africa });
-	// 	}
-	// 	const convertedSchema = toJsonSchema(schema, {
-
-	// 	});
-	// 	const parsed = parseSchema(convertedSchema);
-
-	// 	if (name === "CountryData") {
-	// 		console.log(schema.properties.africa);
-	// 		console.log(convertedSchema.properties.africa);
-	// 		console.log(parsed);
-	// 		process.exit();
-	// 	}
-
-	// 	models[name] = parsed;
-	// });
-
 	const operations = {};
-
-	//console.log({models});
 
 	const openApiDoc = await SwaggerParser.parse(schema);
 
@@ -186,26 +90,30 @@ async function schemaParse(schema) {
 		await generateZodClientFromOpenAPI({
 			openApiDoc,
 			disableWriteToFile: true,
-			templatePath: __dirname + "/template.hbs",
+			templatePath: `${__dirname}/template.hbs`,
 			options: {
 				withDescription: true,
+				defaultStatusBehavior: "auto-correct",
 				//withImplicitRequiredProps: true
-			}
-		})
+			},
+		}),
 	);
 
 	let opSchemas = await generateZodClientFromOpenAPI({
 		openApiDoc,
 		disableWriteToFile: true,
-		templatePath: __dirname + "/opsSchemaTemplate.hbs",
+		templatePath: `${__dirname}/opsSchemaTemplate.hbs`,
+		options: {
+			withDescription: true,
+			defaultStatusBehavior: "auto-correct",
+			//withImplicitRequiredProps: true
+		},
 	});
 
 	opSchemas = removePassthrough(opSchemas);
 	opSchemas = eval(opSchemas);
 
 	Object.entries(schema.paths).forEach(([path, ops]) => {
-		//console.dir({ path, anonSchema: opSchema }, { depth: null });
-
 		Object.entries(ops).forEach(([method, opData]) => {
 			const opSchema = findOpSchema(method, path, opSchemas);
 
