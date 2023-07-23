@@ -10,15 +10,24 @@ tasks:
         cmds:
             - bun install
 
+    install-dist:
+        dir: dist
+        cmds:
+            - bun install
+
     clean:
         cmds:
-            - bun del dist/*.js
-            - bun del out/*.ts
-            - rm -rf node_modules
+            - bun del dist
+            - bun del out
+            #- rm -rf node_modules
+
+    clean-modules:
+        cmds:
+            - bun del ./**/node_modules
 
     clean-dist:
         cmds:
-            - bun del dist/*.js
+            - bun del dist
 
     fixtures:
         cmds:

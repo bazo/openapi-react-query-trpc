@@ -4,7 +4,6 @@
 	"dependencies": {
 		"@rometools/js-api": "^0.3.0",
 		"@rometools/wasm-nodejs": "^12.1.3",
-		"enquirer": "^2.3.6",
 		"ts-node": "^10.9.1"
 	}
 }
