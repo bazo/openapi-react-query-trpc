@@ -1,5 +1,5 @@
 {
-  "name": "openapi-trpc",
+  "name": "openapi-react-query-trpc",
   "bin": "src/bin.js",
   "scripts": {
     "start": "node src/bin.js fixtures/api.json dist -n petsClient"
