@@ -117,7 +117,7 @@ type UseInfiniteQueryResult<TData = unknown, TError = unknown> = UseBaseInfinite
 				return queryFn(<%- h.paramsArg(opData) %> signal);
 			}
 			const invalidate = () => queryClient.invalidateQueries(key);
-			const queryResult = useQuery<<%- h.responseType(opData.responses) %>, <%- h.TError(opData.responses) %>>(key, query, options || {}) as any;
+			const queryResult = useQuery<<%- h.responseType(opData.responses) %>, <%- h.TError(opData.responses) %>>(key, query, options || {});
 			queryResult.invalidate = invalidate;
 			queryResult.key = key;
 			return queryResult;
@@ -128,7 +128,7 @@ type UseInfiniteQueryResult<TData = unknown, TError = unknown> = UseBaseInfinite
 				return queryFn(<%- h.paramsArg(opData) %> signal);
 			}
 			const invalidate = () => queryClient.invalidateQueries(key);
-			const queryResult = useInfiniteQuery<<%- h.responseType(opData.responses) %>, <%- h.TError(opData.responses) %>>(key, query, options || {}) as any;
+			const queryResult = useInfiniteQuery<<%- h.responseType(opData.responses) %>, <%- h.TError(opData.responses) %>>(key, query, options || {});
 			queryResult.invalidate = invalidate;
 			queryResult.key = key;
 			return queryResult;
@@ -192,9 +192,12 @@ export class <%- className %> {
 const http = this.configureHttp(baseUrl, options);
 		this.http = http;
 		
-		// rome-ignore lint/nursery/noConstructorReturn: <explanation>
+		// eslint-disable-next-line
+		// rome-ignore lint/correctness/noConstructorReturn: <explanation>
 		return new Proxy(this, {
 			get(target, name: string) {
+				// eslint-disable-next-line
+				// rome-ignore lint/suspicious/noPrototypeBuiltins: <explanation>
 				if (target.hasOwnProperty(name)) {
 					//@ts-ignore
 					return target[name];

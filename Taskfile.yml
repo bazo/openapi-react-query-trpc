@@ -56,4 +56,11 @@ tasks:
             - cp src/opsSchemaTemplate.hbs dist/_templates/client/new/opsSchemaTemplate.hbs
             - cp src/template.hbs dist/_templates/client/new/template.hbs
             - cp package.json.dist dist/package.json
+            - cp .npmignore dist/.npmignore
+
+    publish:
+        dir: dist
+        cmds:
+            - task: build
+            - npm publish --access=public
             
