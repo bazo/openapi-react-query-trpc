@@ -66,7 +66,7 @@ export function toApiError<T extends ErrorRecord>(error: unknown): GenericWretch
 	return error as GenericWretchError<T>
 }
 
-interface ApiResponse<T> extends Pick<Response, 'headers' | 'url'> {
+export interface ApiResponse<T> extends Pick<Response, 'headers' | 'url'> {
 	data: T;
 	status: number;
 }
