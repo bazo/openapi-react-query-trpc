@@ -118,7 +118,7 @@ type UseInfiniteQueryResult<TData = unknown, TError = unknown> = UseBaseInfinite
 				return queryFn(<%- h.paramsArg(opData) %> signal);
 			}
 			const invalidate = () => queryClient.invalidateQueries(key);
-			const queryResult = useQuery<<%- h.responseType(opData.responses) %>, <%- h.TError(opData.responses) %>>(key, query, options || {});
+			const queryResult = useQuery<<%- h.responseType(opData.responses) %>, <%- h.TError(opData.responses) %>>(key, query, options || {}) as UseQueryResult<<%- h.responseType(opData.responses) %>, <%- h.TError(opData.responses) %>>;
 			queryResult.invalidate = invalidate;
 			queryResult.key = key;
 			return queryResult;
@@ -129,7 +129,7 @@ type UseInfiniteQueryResult<TData = unknown, TError = unknown> = UseBaseInfinite
 				return queryFn(<%- h.paramsArg(opData) %> signal);
 			}
 			const invalidate = () => queryClient.invalidateQueries(key);
-			const queryResult = useInfiniteQuery<<%- h.responseType(opData.responses) %>, <%- h.TError(opData.responses) %>>(key, query, options || {});
+			const queryResult = useInfiniteQuery<<%- h.responseType(opData.responses) %>, <%- h.TError(opData.responses) %>>(key, query, options || {}) as UseInfiniteQueryResult<<%- h.responseType(opData.responses) %>, <%- h.TError(opData.responses) %>>;
 			queryResult.invalidate = invalidate;
 			queryResult.key = key;
 			return queryResult;
