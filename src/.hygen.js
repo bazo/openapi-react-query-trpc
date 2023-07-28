@@ -307,7 +307,7 @@ module.exports = {
 				return "";
 			}
 
-			return `.query({${queryParams.map(({ name }) => name).join(",")}})`;
+			return `.query(qs.stringify({${queryParams.map(({ name }) => name).join(",")}}))`;
 		},
 		queryParams: (queryParams, signal = true) => {
 			let out = "";

@@ -4,6 +4,7 @@ to: <%= outDir %>
 import wretch, {WretchError} from "wretch";
 import QueryStringAddon from "wretch/addons/queryString";
 import * as z from "zod";
+import qs from "qs";
 import {
 	useQuery,
 	UseQueryOptions,
