@@ -25,7 +25,7 @@ function args(pathArgs, queryArgs, requestBody) {
 
 	let code = "{";
 	params.forEach((param) => {
-		code += `${param.name}${param.required ? "" : "?"}: ${schemaTypeToTS(param.schema.type)},`;
+		code += `${param.name}${param.required ? "" : "?"}: ${schemaTypeToTS(param)},`;
 	});
 
 	if (requestBody) {
@@ -46,110 +46,107 @@ function args(pathArgs, queryArgs, requestBody) {
 function processErrorResponses(responses) {
 	let code = "const err = error(e);\n";
 
-	let needsJson = false
-	const map = {}
-	
+	let needsJson = false;
+	const map = {};
+
 	responses.forEach(([resCode, response]) => {
 		let validation = null;
 
-			if (response.model) {
-				//validation = `${response.model}Zod`;
-				validation = `${response.model}`;
-			}
+		if (response.model) {
+			//validation = `${response.model}Zod`;
+			validation = `${response.model}`;
+		}
 
-			if (response.validation) {
-				validation = response.validation;
-			}
+		if (response.validation) {
+			validation = response.validation;
+		}
 
-			if(validation) {
-				needsJson = true
-			}
+		if (validation) {
+			needsJson = true;
+		}
 
-			map[resCode] = validation
+		map[resCode] = validation;
+	});
 
-	})
-
-	if(needsJson) {
-		code += "const json = err.json;\n"
+	if (needsJson) {
+		code += "const json = err.json;\n";
 	}
 
 	if (responses.length > 0) {
-		code += `switch(err.status) {\n`;
+		code += "switch(err.status) {\n";
 
 		responses.forEach(([resCode, response]) => {
 			code += `case ${resCode}: {\n`;
 
-			const validation = map[resCode]
+			const validation = map[resCode];
 
-			if(validation) {
+			if (validation) {
 				code += `
 				err.json = ${validation}.parse(json);
 				`;
 			} else {
-				
 			}
 
-			code += "}\n";	
-		})
+			code += "}\n";
+		});
 
 		code += "}\n";
 	}
-	code += "throw err;\n"
-	return code
+	code += "throw err;\n";
+	return code;
 }
 
 function processOkResponses(responses) {
 	let code = "";
 
-	let needsJson = false
-	const map = {}
-	
+	let needsJson = false;
+	const map = {};
+
 	responses.forEach(([resCode, response]) => {
 		let validation = null;
 
-			if (response.model) {
-				//validation = `${response.model}Zod`;
-				validation = `${response.model}`;
-			}
+		if (response.model) {
+			//validation = `${response.model}Zod`;
+			validation = `${response.model}`;
+		}
 
-			if (response.validation) {
-				validation = response.validation;
-			}
+		if (response.validation) {
+			validation = response.validation;
+		}
 
-			if(validation) {
-				needsJson = true
-			}
+		if (validation) {
+			needsJson = true;
+		}
 
-			map[resCode] = validation
+		map[resCode] = validation;
+	});
 
-	})
-
-	if(needsJson) {
-		code += "const json = await res.json();\n"
+	if (needsJson) {
+		code += "const json = await res.json();\n";
 	}
 
 	if (responses.length > 0) {
-		code += `switch(res.status) {\n`;
+		code += "switch(res.status) {\n";
 
 		responses.forEach(([resCode, response]) => {
 			code += `case ${resCode}: {\n`;
 
-			const validation = map[resCode]
+			const validation = map[resCode];
 
-			if(validation) {
+			if (validation) {
 				code += `const data = ${validation}.parse(json);\n`;
 				code += "return {status: res.status, data, headers: res.headers, url: res.url};\n";
 			} else {
 				code += "return {status: res.status, data: null, headers: res.headers, url: res.url};\n";
 			}
 
-			code += "}\n";	
-		})
+			code += "}\n";
+		});
 
 		code += "}\n";
 	}
-	
-	return code
+
+	return code;
 }
 
 function hasParams(opData) {
@@ -260,9 +257,7 @@ module.exports = {
 				return "";
 			}
 
-			let code = `body: ${requestBody.model}`;
-
-			return code;
+			return `body: ${requestBody.model}`;
 		},
 		hasParams,
 		paramsArg: (opData) => {
@@ -337,7 +332,7 @@ module.exports = {
 			if (path.includes("{")) {
 				return "`" + replacedPath + "`";
 			}
-			return '"' + replacedPath + '"';
+			return `"${replacedPath}"`;
 		},
 		responseOk: (responses) => {
 			const response = responses["200"];
@@ -356,7 +351,7 @@ module.exports = {
 			}
 
 			if (validation === "") {
-				return `return {status: res.status, data: null, headers: res.headers, url: res.url}`;
+				return "return {status: res.status, data: null, headers: res.headers, url: res.url}";
 			}
 
 			let code = "const json = await res.json();\n";
@@ -367,7 +362,7 @@ module.exports = {
 				code += `const data = ${validation}.parse(json);\n`;
 			}
 
-			code += `return {status: res.status, data, headers: res.headers, url: res.url}`;
+			code += "return {status: res.status, data, headers: res.headers, url: res.url}";
 
 			return code;
 		},
