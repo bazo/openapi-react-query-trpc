@@ -1,7 +1,17 @@
-function schemaTypeToTS(type) {
+function schemaTypeToTS(param) {
+	const type = param.schema.type;
 	switch (type) {
 		case "integer":
 			return "number";
+		case "string":
+			return "string";
+		case "array": {
+			if (param.schema.items.$ref) {
+				const type = param.schema.items.$ref.replace("#/components/schemas/", "");
+				return `${type}[]`;
+			}
+			return `${param.schema.items.type}[]`;
+		}
 		default:
 			return type;
 	}
