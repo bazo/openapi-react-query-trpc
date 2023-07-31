@@ -1,6 +1,6 @@
 {
 	"name": "@bazo/openapi-react-query-trpc",
-	"version": "0.1.5",
+	"version": "0.1.7",
 	"bin": "bin.js",
 	"dependencies": {
 		"@rometools/js-api": "^0.3.0",
