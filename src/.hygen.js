@@ -229,10 +229,10 @@ module.exports = {
 		queryKey: (name, opData) => {
 			const params = [...opData.params.pathParams, ...opData.params.queryParams];
 			if (params.length === 0) {
-				return `["${name}"]`;
+				return `["${name}", ...(options?.queryKey || [])]`;
 			}
 
-			return `["${name}", params]`;
+			return `["${name}", params, ...(options?.queryKey || [])]`;
 		},
 		params: (pathArgs, queryArgs, requestBody) => {
 			const params = [...pathArgs, ...queryArgs];

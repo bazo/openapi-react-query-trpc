@@ -112,7 +112,7 @@ type UseInfiniteQueryResult<TData = unknown, TError = unknown> = UseBaseInfinite
 
 			return {  
        query: queryFn,
-		useQuery: (<%= h.params(opData.params.pathParams, opData.params.queryParams) %> options?: Omit<UseQueryOptions<<%- h.responseType(opData.responses) %>, <%- h.TError(opData.responses) %>>, 'queryKey' | 'queryFn' >): UseQueryResult<<%- h.responseType(opData.responses) %>, <%- h.TError(opData.responses) %>> => {
+		useQuery: (<%= h.params(opData.params.pathParams, opData.params.queryParams) %> options?: Omit<UseQueryOptions<<%- h.responseType(opData.responses) %>, <%- h.TError(opData.responses) %>>, 'queryFn' >): UseQueryResult<<%- h.responseType(opData.responses) %>, <%- h.TError(opData.responses) %>> => {
 			const key = <%- h.queryKey(name, opData) %>;
 			const query: QueryFunction<<%- h.responseType(opData.responses) %>> = async ({meta, queryKey, pageParam, signal}) => {
 				return queryFn(<%- h.paramsArg(opData) %> signal);
@@ -123,7 +123,7 @@ type UseInfiniteQueryResult<TData = unknown, TError = unknown> = UseBaseInfinite
 			queryResult.key = key;
 			return queryResult;
 		},
-		useInfiniteQuery: (<%= h.params(opData.params.pathParams, opData.params.queryParams) %> options?: Omit<UseInfiniteQueryOptions<<%- h.responseType(opData.responses) %>, <%- h.TError(opData.responses) %>>, 'queryKey' | 'queryFn' >): UseInfiniteQueryResult<<%- h.responseType(opData.responses) %>, <%- h.TError(opData.responses) %>> => {
+		useInfiniteQuery: (<%= h.params(opData.params.pathParams, opData.params.queryParams) %> options?: Omit<UseInfiniteQueryOptions<<%- h.responseType(opData.responses) %>, <%- h.TError(opData.responses) %>>, 'queryFn' >): UseInfiniteQueryResult<<%- h.responseType(opData.responses) %>, <%- h.TError(opData.responses) %>> => {
 			const key = <%- h.queryKey(name, opData) %>;
 			const query: QueryFunction<<%- h.responseType(opData.responses) %>> = async ({meta, queryKey, pageParam, signal}) => {
 				return queryFn(<%- h.paramsArg(opData) %> signal);
