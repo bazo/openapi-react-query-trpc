@@ -36,7 +36,7 @@ tasks:
 
     run:
         cmds:
-            - node src/bin.js fixtures/api.json out -n petsClient
+            - bun src/bin.ts fixtures/api.json out -n petsClient
 
     run-dist:
         cmds:
@@ -49,9 +49,9 @@ tasks:
 
     build:
         cmds:
-            - bun esbuild src/_templates/client/new/index.js --bundle --platform=node --outdir=dist/_templates/client/new/
+            - bun esbuild src/_templates/client/new/index.ts --bundle --platform=node --outdir=dist/_templates/client/new/
             - bun esbuild src/.hygen.js --bundle --platform=node --outdir=dist
-            - bun esbuild src/bin.js --bundle --platform=node --outdir=dist
+            - bun esbuild src/bin.ts --bundle --platform=node --outdir=dist
             - cp src/_templates/client/new/new-client.ejs.t dist/_templates/client/new/new-client.ejs.t 
             - cp src/opsSchemaTemplate.hbs dist/_templates/client/new/opsSchemaTemplate.hbs
             - cp src/template.hbs dist/_templates/client/new/template.hbs

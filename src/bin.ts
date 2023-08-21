@@ -14,7 +14,7 @@ const defaultTemplates = path.join(__dirname, "_templates");
 const program = new Command();
 program
 	.description("API Client generator")
-	.version("0.8.0")
+	.version("0.1.8")
 	.argument("<openapi-schema-json>", "path to open api schema")
 	.argument("<output-dir>", "where to save the client")
 	.requiredOption("-n, --name <name>", "client class name")
