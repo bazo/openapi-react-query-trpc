@@ -169,8 +169,9 @@ export class <%- className %> {
 	// rome-ignore lint/suspicious/noExplicitAny: <explanation>
 	private operations: Map<string, any>;
 
-	public http: Http
-	private onHttpConfigure: (wretch: Http) => Http
+	public http: Http;
+	public queryClient: QueryClient;
+	private onHttpConfigure: (wretch: Http) => Http;
 
     <% Object.entries(operations).forEach(([name, opData]) => { %>
 		<%= h.opDescription(opData) %>
@@ -182,6 +183,7 @@ export class <%- className %> {
 		options: Pick<RequestInit, "headers" | "credentials" | "mode"> = {},
 		onHttpConfigure: <%- className %>['onHttpConfigure'] = (wretch) => wretch
 	) {
+		this.queryClient = queryClient;
 		this.onHttpConfigure = onHttpConfigure
 		this.operations = new Map();
 
