@@ -18,6 +18,7 @@ program
 	.argument("<openapi-schema-json>", "path to open api schema")
 	.argument("<output-dir>", "where to save the client")
 	.requiredOption("-n, --name <name>", "client class name")
+	.requiredOption("-m, --mode <mode>", "full or short")
 	.action(async (file, outDir) => {
 		console.log("generating client...");
 		const res = await runRunner(file, outDir);
