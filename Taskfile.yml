@@ -37,7 +37,7 @@ tasks:
     run:
         cmds:
             - npx del out
-            - node src/bin.ts fixtures/api.json out -n petsClient
+            - node --experimental-strip-types src/bin.ts fixtures/api.json out -n petsClient
             - npx biome format --write out/petsClient.ts
 
     run-dist:

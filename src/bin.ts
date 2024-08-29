@@ -25,7 +25,7 @@ program
 
 program.parse(process.argv);
 
-process.env.HYGEN_OVERWRITE = 1;
+process.env.HYGEN_OVERWRITE = "1";
 
 function runRunner(file: string, outDir: string) {
 	return runner(["client", "new", "--file", file, "--outDir", outDir, "--className", program.opts().name], {
