@@ -7,7 +7,10 @@ function schemaTypeToTS(param) {
 			return "string";
 		case "array": {
 			if (param.schema.items.$ref) {
-				const type = param.schema.items.$ref.replace("#/components/schemas/", "");
+				const type = param.schema.items.$ref.replace(
+					"#/components/schemas/",
+					""
+				);
 				return `${type}[]`;
 			}
 			return `${param.schema.items.type}[]`;
@@ -24,9 +27,11 @@ function args(pathArgs, queryArgs, requestBody) {
 	}
 
 	let code = "{";
-	params.forEach((param) => {
-		code += `${param.name}${param.required ? "" : "?"}: ${schemaTypeToTS(param)},`;
-	});
+	for (const param of params) {
+		code += `${param.name}${param.required ? "" : "?"}: ${schemaTypeToTS(
+			param
+		)},`;
+	}
 
 	if (requestBody) {
 		if (requestBody.model) {
@@ -49,7 +54,7 @@ function processErrorResponses(responses) {
 	let needsJson = false;
 	const map = {};
 
-	responses.forEach(([resCode, response]) => {
+	for (const [resCode, response] of responses) {
 		let validation = null;
 
 		if (response.model) {
@@ -66,7 +71,7 @@ function processErrorResponses(responses) {
 		}
 
 		map[resCode] = validation;
-	});
+	}
 
 	if (needsJson) {
 		code += "const json = err.json;\n";
@@ -75,7 +80,7 @@ function processErrorResponses(responses) {
 	if (responses.length > 0) {
 		code += "switch(err.status) {\n";
 
-		responses.forEach(([resCode, response]) => {
+		for (const [resCode, response] of responses) {
 			code += `case ${resCode}: {\n`;
 
 			const validation = map[resCode];
@@ -88,7 +93,7 @@ function processErrorResponses(responses) {
 			}
 
 			code += "}\n";
-		});
+		}
 
 		code += "}\n";
 	}
@@ -102,7 +107,7 @@ function processOkResponses(responses) {
 	let needsJson = false;
 	const map = {};
 
-	responses.forEach(([resCode, response]) => {
+	for (const [resCode, response] of responses) {
 		let validation = null;
 
 		if (response.model) {
@@ -119,7 +124,7 @@ function processOkResponses(responses) {
 		}
 
 		map[resCode] = validation;
-	});
+	}
 
 	if (needsJson) {
 		code += "const json = await res.json();\n";
@@ -128,20 +133,22 @@ function processOkResponses(responses) {
 	if (responses.length > 0) {
 		code += "switch(res.status) {\n";
 
-		responses.forEach(([resCode, response]) => {
+		for (const [resCode, response] of responses) {
 			code += `case ${resCode}: {\n`;
 
 			const validation = map[resCode];
 
 			if (validation) {
 				code += `const data = ${validation}.parse(json);\n`;
-				code += "return {status: res.status, data, headers: res.headers, url: res.url};\n";
+				code +=
+					"return {status: res.status, data, headers: res.headers, url: res.url};\n";
 			} else {
-				code += "return {status: res.status, data: null, headers: res.headers, url: res.url};\n";
+				code +=
+					"return {status: res.status, data: null, headers: res.headers, url: res.url};\n";
 			}
 
 			code += "}\n";
-		});
+		}
 
 		code += "}\n";
 	}
@@ -150,7 +157,9 @@ function processOkResponses(responses) {
 }
 
 function hasParams(opData) {
-	return [...opData.params.pathParams, ...opData.params.queryParams].length > 0;
+	return (
+		[...opData.params.pathParams, ...opData.params.queryParams].length > 0
+	);
 }
 
 function responseTypeMutation(responses) {
@@ -227,7 +236,10 @@ module.exports = {
 		log: console.log,
 		args,
 		queryKey: (name, opData) => {
-			const params = [...opData.params.pathParams, ...opData.params.queryParams];
+			const params = [
+				...opData.params.pathParams,
+				...opData.params.queryParams,
+			];
 			if (params.length === 0) {
 				return `["${name}", ...(options?.queryKey || [])]`;
 			}
@@ -268,11 +280,17 @@ module.exports = {
 			return "";
 		},
 		paramValidation: (opData) => {
-			const params = [...opData.params.pathParams, ...opData.params.queryParams];
+			const params = [
+				...opData.params.pathParams,
+				...opData.params.queryParams,
+			];
 
 			if (opData.requestBody) {
 				//opData.params.validation = opData.params.validation.replace('"body":z.any()', `"body":${opData.requestBody.model}Zod`);
-				opData.params.validation = opData.params.validation.replace('"body":z.any()', `"body":${opData.requestBody.model}`);
+				opData.params.validation = opData.params.validation.replace(
+					'"body":z.any()',
+					`"body":${opData.requestBody.model}`
+				);
 			}
 
 			if (params.length === 0 && !opData.requestBody) {
@@ -286,7 +304,10 @@ module.exports = {
 			return `const args = ${opData.params.validation}.parse(params);`;
 		},
 		paramsDestructure: (opData) => {
-			const params = [...opData.params.pathParams, ...opData.params.queryParams];
+			const params = [
+				...opData.params.pathParams,
+				...opData.params.queryParams,
+			];
 
 			if (opData.requestBody) {
 				if (opData.requestBody.model) {
@@ -307,7 +328,9 @@ module.exports = {
 				return "";
 			}
 
-			return `.query(qs.stringify({${queryParams.map(({ name }) => name).join(",")}}))`;
+			return `.query(qs.stringify({${queryParams
+				.map(({ name }) => name)
+				.join(",")}}))`;
 		},
 		queryParams: (queryParams, signal = true) => {
 			let out = "";
@@ -330,7 +353,8 @@ module.exports = {
 		pathToTemplateLiteral: (path) => {
 			const replacedPath = path.replaceAll("{", "${");
 			if (path.includes("{")) {
-				return "`" + replacedPath + "`";
+				//return "`" + replacedPath + "`";
+				return `\`${replacedPath}\``;
 			}
 			return `"${replacedPath}"`;
 		},
@@ -362,16 +386,21 @@ module.exports = {
 				code += `const data = ${validation}.parse(json);\n`;
 			}
 
-			code += "return {status: res.status, data, headers: res.headers, url: res.url}";
+			code +=
+				"return {status: res.status, data, headers: res.headers, url: res.url}";
 
 			return code;
 		},
 		okResponses: (responses) => {
-			const errorResponses = Object.entries(responses).filter(([code, respose]) => code.startsWith("2"));
+			const errorResponses = Object.entries(responses).filter(
+				([code, response]) => code.startsWith("2")
+			);
 			return processOkResponses(errorResponses);
 		},
 		errorResponses: (responses) => {
-			const errorResponses = Object.entries(responses).filter(([code, respose]) => code.startsWith("4"));
+			const errorResponses = Object.entries(responses).filter(
+				([code, response]) => code.startsWith("4")
+			);
 			return processErrorResponses(errorResponses);
 		},
 		responseTypePromise: (responses) => {

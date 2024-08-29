@@ -40,6 +40,12 @@ tasks:
             - node --experimental-strip-types src/bin.ts fixtures/api.json out -n petsClient
             - npx biome format --write out/petsClient.ts
 
+    run-short:
+        cmds:
+            - npx del out
+            - node --experimental-strip-types src/bin.ts fixtures/api.json out -n petsClient -m short
+            - npx biome format --write out/petsClient.ts
+
     run-dist:
         cmds:
             - npx del out

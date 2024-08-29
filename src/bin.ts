@@ -4,8 +4,8 @@ const { runner } = require("hygen");
 const Logger = require("hygen/dist/logger");
 const path = require("path");
 const { Command } = require("commander");
-const enquirer = require("enquirer")
-const execa = require("execa")
+const enquirer = require("enquirer");
+const execa = require("execa");
 // const fs = require("fs");
 
 const defaultTemplates = path.join(__dirname, "_templates");
@@ -17,7 +17,7 @@ program
 	.argument("<openapi-schema-json>", "path to open api schema")
 	.argument("<output-dir>", "where to save the client")
 	.requiredOption("-n, --name <name>", "client class name")
-	.option("-m, --mode <mode>", "full or short")
+	.option("-m, --mode <mode>", "full or short", "full")
 	.action(async (file: string, outDir: string) => {
 		console.log("generating client...");
 		const res = await runRunner(file, outDir);
@@ -28,12 +28,14 @@ program.parse(process.argv);
 process.env.HYGEN_OVERWRITE = "1";
 
 function runRunner(file: string, outDir: string) {
-	return runner(["client", "new", "--file", file, "--outDir", outDir, "--className", program.opts().name], {
+	const cmd = ["client", program.opts().mode, "--file", file, "--outDir", outDir, "--className", program.opts().name];
+	console.log({ cmd });
+	return runner(cmd, {
 		templates: defaultTemplates,
 		cwd: __dirname,
 		logger: new Logger.default(console.log.bind(console)),
 		createPrompter: () => enquirer,
-		exec: (action, body) => {
+		exec: (action: any, body: any) => {
 			const opts = body && body.length > 0 ? { input: body } : {};
 			return execa.shell(action, opts);
 		},
