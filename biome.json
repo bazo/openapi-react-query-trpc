@@ -32,7 +32,7 @@
 		]
 	},
 	"formatter": {
-		"indentSize": 4,
+		"indentWidth": 4,
 		"lineWidth": 150,
 		"ignore": [
 			".husky",

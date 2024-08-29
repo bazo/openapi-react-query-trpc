@@ -6,7 +6,6 @@ const path = require("path");
 const { Command } = require("commander");
 const enquirer = require("enquirer")
 const execa = require("execa")
-// const { Rome, Distribution } = require("@rometools/js-api");
 // const fs = require("fs");
 
 const defaultTemplates = path.join(__dirname, "_templates");
@@ -18,7 +17,7 @@ program
 	.argument("<openapi-schema-json>", "path to open api schema")
 	.argument("<output-dir>", "where to save the client")
 	.requiredOption("-n, --name <name>", "client class name")
-	.requiredOption("-m, --mode <mode>", "full or short")
+	.option("-m, --mode <mode>", "full or short")
 	.action(async (file, outDir) => {
 		console.log("generating client...");
 		const res = await runRunner(file, outDir);

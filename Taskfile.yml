@@ -36,7 +36,7 @@ tasks:
 
     run:
         cmds:
-            - bun src/bin.ts fixtures/api.json out -n petsClient
+            - node src/bin.ts fixtures/api.json out -n petsClient
 
     run-dist:
         cmds:
