@@ -18,32 +18,16 @@ program
 	.argument("<output-dir>", "where to save the client")
 	.requiredOption("-n, --name <name>", "client class name")
 	.option("-m, --mode <mode>", "full or short")
-	.action(async (file, outDir) => {
+	.action(async (file: string, outDir: string) => {
 		console.log("generating client...");
 		const res = await runRunner(file, outDir);
-		// if (res.success) {
-		// 	const rome = await Rome.create({
-		// 		distribution: Distribution.NODE, // Or BUNDLER / WEB depending on the distribution package you've installed
-
-		// 	});
-
-		// 	res.actions.forEach(async (action) => {
-		// 		const content = fs.readFileSync(action.subject, "utf8");
-		// 		const formatted = await rome.formatContent(content, {
-		// 			filePath: action.subject,
-					
-		// 		});
-
-		// 		fs.writeFile(action.subject, formatted.content);
-		// 	});
-		// }
 	});
 
 program.parse(process.argv);
 
 process.env.HYGEN_OVERWRITE = 1;
 
-function runRunner(file, outDir) {
+function runRunner(file: string, outDir: string) {
 	return runner(["client", "new", "--file", file, "--outDir", outDir, "--className", program.opts().name], {
 		templates: defaultTemplates,
 		cwd: __dirname,

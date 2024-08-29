@@ -166,7 +166,7 @@ type UseInfiniteQueryResult<TData = unknown, TError = unknown> = UseBaseInfinite
 type Http = ReturnType<<%- className %>['createHttp']>
 
 export class <%- className %> {
-	// rome-ignore lint/suspicious/noExplicitAny: <explanation>
+	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 	private operations: Map<string, any>;
 
 	public http: Http;
@@ -196,11 +196,11 @@ const http = this.configureHttp(baseUrl, options);
 		this.http = http;
 		
 		// eslint-disable-next-line
-		// rome-ignore lint/correctness/noConstructorReturn: <explanation>
+		// biome-ignore lint/correctness/noConstructorReturn: <explanation>
 		return new Proxy(this, {
 			get(target, name: string) {
 				// eslint-disable-next-line
-				// rome-ignore lint/suspicious/noPrototypeBuiltins: <explanation>
+				// biome-ignore lint/suspicious/noPrototypeBuiltins: <explanation>
 				if (target.hasOwnProperty(name)) {
 					//@ts-ignore
 					return target[name];

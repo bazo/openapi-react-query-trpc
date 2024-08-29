@@ -17,7 +17,7 @@ module.exports = {
 		const schemaJson = fs.readFileSync(file, "utf8"); // must be OpenAPI JSON
 
 		const schema = JSON.parse(schemaJson);
-		// rome-ignore lint/performance/noDelete: <explanation>
+		// biome-ignore lint/performance/noDelete: <explanation>
 		delete args.file;
 
 		const parseOutput = await schemaParser(schema);

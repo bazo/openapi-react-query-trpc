@@ -32,15 +32,19 @@ tasks:
     fixtures:
         cmds:
             - curl -o fixtures/api.json https://raw.githubusercontent.com/OAI/OpenAPI-Specification/main/examples/v2.0/json/petstore.json
-            - bun rome format --write fixtures/api.json
+            - npx biome format --write fixtures/api.json
 
     run:
         cmds:
+            - npx del out
             - node src/bin.ts fixtures/api.json out -n petsClient
+            - npx biome format --write out/petsClient.ts
 
     run-dist:
         cmds:
+            - npx del out
             - node dist/bin.js fixtures/api.json out -n petsClient
+            - npx biome format --write out/petsClient.ts
 
     ncu:
         cmds:
