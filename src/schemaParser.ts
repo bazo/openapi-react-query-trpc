@@ -55,7 +55,7 @@ function handleContent(content) {
 	return { contentType, model, isArray, validation };
 }
 
-function removePassthrough(text) {
+function removePassthrough(text: string) {
 	return text.replace(/\.passthrough\(\)/g, "");
 }
 
@@ -65,15 +65,15 @@ function removePassthrough(text) {
  * @param {Array} schemas
  * @returns
  */
-function findOpSchema(method, path, schemas) {
+function findOpSchema(method: string, path: string, schemas) {
 	let lookupPath = path;
 
 	if (path.indexOf("{") > 0) {
-		const matches = path.match(/{\w+}/g);
-		matches.forEach((match) => {
+		const matches = path.match(/{\w+}/g) || [];
+		for (const match of matches) {
 			const replace = `:${match.replace("{", "").replace("}", "")}`;
 			lookupPath = lookupPath.replace(match, replace);
-		});
+		}
 	}
 
 	return schemas.find((schema) => schema.path === lookupPath && schema.method === method);
@@ -111,10 +111,11 @@ async function schemaParse(schema) {
 	});
 
 	opSchemas = removePassthrough(opSchemas);
+	// biome-ignore lint/security/noGlobalEval: <explanation>
 	opSchemas = eval(opSchemas);
 
-	Object.entries(schema.paths).forEach(([path, ops]) => {
-		Object.entries(ops).forEach(([method, opData]) => {
+	for (const [path, ops] of Object.entries(schema.paths)) {
+		for (const [method, opData] of Object.entries(ops)) {
 			const opSchema = findOpSchema(method, path, opSchemas);
 
 			const paramSchema = {
@@ -126,7 +127,7 @@ async function schemaParse(schema) {
 			const pathParams = [];
 			const queryParams = [];
 			if (opData.parameters) {
-				opData.parameters.forEach((parameter) => {
+				for (const parameter of opData.parameters) {
 					if (parameter.in === "path") {
 						pathParams.push(parameter);
 					}
@@ -142,7 +143,7 @@ async function schemaParse(schema) {
 					if (parameter.required === true) {
 						paramSchema.required.push(parameter.name);
 					}
-				});
+				}
 			}
 
 			let requestBody = null;
@@ -195,7 +196,7 @@ async function schemaParse(schema) {
 
 			const responses = {};
 
-			Object.entries(opData.responses).forEach(([code, resData]) => {
+			for (const [code, resData] of Object.entries(opData.responses)) {
 				if (resData.content) {
 					const { contentType /*model,*/ /*isArray*/ /* validation*/ } = handleContent(resData.content);
 
@@ -237,7 +238,7 @@ async function schemaParse(schema) {
 						validation: null,
 					};
 				}
-			});
+			}
 
 			operations[opData.operationId] = {
 				path,
@@ -252,11 +253,11 @@ async function schemaParse(schema) {
 				type: method === "get" ? "query" : "mutation",
 				description: opData.description,
 			};
-		});
-	});
+		}
+	}
 
-	Object.entries(operations).forEach(([name, opData]) => {
-		Object.entries(opData.responses).forEach(([code, res]) => {
+	for (const [name, opData] of Object.entries(operations)) {
+		for (const [code, res] of Object.entries(opData.responses)) {
 			if (res.validation) {
 				let modelName = res.validation;
 				if (res.validation.startsWith("z.")) {
@@ -266,8 +267,8 @@ async function schemaParse(schema) {
 				res.model = modelName;
 				res.validation = null;
 			}
-		});
-	});
+		}
+	}
 
 	return { models, operations, schemaTypes };
 }
