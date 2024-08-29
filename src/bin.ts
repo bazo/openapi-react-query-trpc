@@ -15,7 +15,7 @@ program
 	.argument("<openapi-schema-json>", "path to open api schema")
 	.argument("<output-dir>", "where to save the client")
 	.requiredOption("-n, --name <name>", "client class name")
-	.option("-m, --mode <mode>", "full or short", "full")
+	.option("-m, --mode <mode>", "full or playwright", "full")
 	.action((file: string, outDir: string, opts: Record<string, string>, command: typeof Command) => {
 		console.log(`generating ${opts.name} in ${opts.mode} mode from ${file}...`);
 		runRunner(file, outDir);

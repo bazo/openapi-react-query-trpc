@@ -40,11 +40,11 @@ tasks:
             - node --experimental-strip-types src/bin.ts fixtures/api.json out -n petsClientFull
             - npx biome format --write out/petsClientFull.ts
 
-    run-short:
+    run-pw:
         cmds:
-            - npx del out/petsClientShort.ts
-            - node --experimental-strip-types src/bin.ts fixtures/api.json out -n petsClientShort -m short
-            - npx biome format --write out/petsClientShort.ts
+            - npx del out/petsClientPlaywright.ts
+            - node --experimental-strip-types src/bin.ts fixtures/api.json out -n petsClientPlaywright -m playwright
+            - npx biome format --write out/petsClientPlaywright.ts
 
     run-dist:
         cmds:
@@ -52,11 +52,11 @@ tasks:
             - node dist/bin.js fixtures/api.json out -n petsClientFull
             - npx biome format --write out/petsClientFull.ts
 
-    run-short-dist:
+    run-pw-dist:
         cmds:
-            - npx del out/petsClientShort.ts
-            - node dist/bin.js fixtures/api.json out -n petsClientShort -m short
-            - npx biome format --write out/petsClientShort.ts
+            - npx del out/petsClientPlaywright.ts
+            - node dist/bin.js fixtures/api.json out -n petsClientPlaywright -m playwright
+            - npx biome format --write out/petsClientPlaywright.ts
 
     ncu:
         cmds:
@@ -67,15 +67,15 @@ tasks:
         cmds:
             - npx del dist
             - npx esbuild src/_templates/client/full/index.ts --bundle --platform=node --outdir=dist/_templates/client/full/
-            - npx esbuild src/_templates/client/short/index.ts --bundle --platform=node --outdir=dist/_templates/client/short/
+            - npx esbuild src/_templates/client/playwright/index.ts --bundle --platform=node --outdir=dist/_templates/client/playwright/
             - npx esbuild src/.hygen.js --bundle --platform=node --outdir=dist
             - npx esbuild src/bin.ts --bundle --platform=node --outdir=dist
             - cp src/_templates/client/full/new-client.ejs.t dist/_templates/client/full/new-client.ejs.t 
-            - cp src/_templates/client/short/new-client.ejs.t dist/_templates/client/short/new-client.ejs.t 
+            - cp src/_templates/client/playwright/new-client.ejs.t dist/_templates/client/playwright/new-client.ejs.t 
             - cp src/opsSchemaTemplate.hbs dist/_templates/client/full/opsSchemaTemplate.hbs
             - cp src/template.hbs dist/_templates/client/full/template.hbs
-            - cp src/opsSchemaTemplate.hbs dist/_templates/client/short/opsSchemaTemplate.hbs
-            - cp src/template.hbs dist/_templates/client/short/template.hbs
+            - cp src/opsSchemaTemplate.hbs dist/_templates/client/playwright/opsSchemaTemplate.hbs
+            - cp src/template.hbs dist/_templates/client/playwright/template.hbs
             - cp package.json.dist dist/package.json
             - cp .npmignore dist/.npmignore
 

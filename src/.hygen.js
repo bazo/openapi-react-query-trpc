@@ -92,7 +92,7 @@ function processErrorResponses(responses) {
 			} else {
 			}
 
-			code += "}\n";
+			code += "break;\n}\n";
 		}
 
 		code += "}\n";
@@ -145,6 +145,61 @@ function processOkResponses(responses) {
 			} else {
 				code +=
 					"return {status: res.status, data: null, headers: res.headers, url: res.url};\n";
+			}
+
+			code += "}\n";
+		}
+
+		code += "}\n";
+	}
+
+	return code;
+}
+
+function processOkResponsesPlaywright(responses) {
+	let code = "";
+
+	let needsJson = false;
+	const map = {};
+
+	for (const [resCode, response] of responses) {
+		let validation = null;
+
+		if (response.model) {
+			//validation = `${response.model}Zod`;
+			validation = `${response.model}`;
+		}
+
+		if (response.validation) {
+			validation = response.validation;
+		}
+
+		if (validation) {
+			needsJson = true;
+		}
+
+		map[resCode] = validation;
+	}
+
+	if (needsJson) {
+		code += "const json = await res.json();\n";
+	}
+
+	if (responses.length > 0) {
+		code += "switch(res.status()) {\n";
+
+		for (const [resCode, response] of responses) {
+			code += `case ${resCode}: {\n`;
+
+			const validation = map[resCode];
+
+			if (validation) {
+				code += `const data = ${validation}.parse(json);\n`;
+				code +=
+					"return {status: res.status(), data, headers: res.headers(), url: res.url()};\n";
+			} else {
+				code +=
+					"return {status: res.status(), data: null, headers: res.headers(), url: res.url()};\n";
 			}
 
 			code += "}\n";
@@ -332,6 +387,15 @@ module.exports = {
 				.map(({ name }) => name)
 				.join(",")}}))`;
 		},
+		queryPlaywright: (queryParams) => {
+			if (queryParams.length === 0) {
+				return "";
+			}
+
+			return `params: {${queryParams
+				.map(({ name }) => name)
+				.join(",")}},`;
+		},
 		queryParams: (queryParams, signal = true) => {
 			let out = "";
 			if (queryParams.length === 0) {
@@ -397,6 +461,12 @@ module.exports = {
 			);
 			return processOkResponses(errorResponses);
 		},
+		okResponsesPlaywright: (responses) => {
+			const errorResponses = Object.entries(responses).filter(
+				([code, response]) => code.startsWith("2")
+			);
+			return processOkResponsesPlaywright(errorResponses);
+		},
 		errorResponses: (responses) => {
 			const errorResponses = Object.entries(responses).filter(
 				([code, response]) => code.startsWith("4")
@@ -433,6 +503,17 @@ module.exports = {
 			}
 
 			return ".json(body)";
+		},
+		payloadPlaywright: (requestBody) => {
+			if (!requestBody) {
+				return "";
+			}
+
+			if (!requestBody.model) {
+				return "";
+			}
+
+			return "data: body,";
 		},
 		TError,
 	},
