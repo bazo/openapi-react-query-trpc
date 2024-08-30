@@ -156,7 +156,7 @@ function processOkResponses(responses) {
 	return code;
 }
 
-function processOkResponsesPlaywright(responses) {
+function processResponsesPlaywright(responses) {
 	let code = "";
 
 	let needsJson = false;
@@ -196,10 +196,10 @@ function processOkResponsesPlaywright(responses) {
 			if (validation) {
 				code += `const data = ${validation}.parse(json);\n`;
 				code +=
-					"return {status: res.status(), data, headers: res.headers(), url: res.url()};\n";
+					"return {status: res.status(), data, headers: res.headers(), url: res.url(), body: resBody};\n";
 			} else {
 				code +=
-					"return {status: res.status(), data: null, headers: res.headers(), url: res.url()};\n";
+					"return {status: res.status(), data: null, headers: res.headers(), url: res.url(), body: resBody};\n";
 			}
 
 			code += "}\n";
@@ -461,11 +461,8 @@ module.exports = {
 			);
 			return processOkResponses(errorResponses);
 		},
-		okResponsesPlaywright: (responses) => {
-			const errorResponses = Object.entries(responses).filter(
-				([code, response]) => code.startsWith("2")
-			);
-			return processOkResponsesPlaywright(errorResponses);
+		responsesPlaywright: (responses) => {
+			return processResponsesPlaywright(Object.entries(responses));
 		},
 		errorResponses: (responses) => {
 			const errorResponses = Object.entries(responses).filter(

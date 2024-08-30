@@ -42,9 +42,9 @@ tasks:
 
     run-pw:
         cmds:
-            - npx del out/petsClientPlaywright.ts
-            - node --experimental-strip-types src/bin.ts fixtures/api.json out -n petsClientPlaywright -m playwright
-            - npx biome format --write out/petsClientPlaywright.ts
+            - npx del out/MobileApiClient.ts
+            - node --experimental-strip-types src/bin.ts fixtures/api.json out -n MobileApiClient -m playwright
+            - npx biome format --write out/MobileApiClient.ts
 
     run-dist:
         cmds:

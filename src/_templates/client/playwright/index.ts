@@ -24,8 +24,6 @@ module.exports = {
 
 		const data = { ...args, outDir, ...parseOutput,  };
 
-		console.log({data})
-
 		return data;
 	},
 };

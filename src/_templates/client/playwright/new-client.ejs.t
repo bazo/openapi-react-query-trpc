@@ -78,6 +78,7 @@ export interface ApiResponse<T> extends Pick<Response, 'url'> {
 	headers: {
 		[key: string]: string;
 	};
+	body: string;
 }
 
 
@@ -99,16 +100,14 @@ export interface ApiResponse<T> extends Pick<Response, 'url'> {
 		const <%- name %> = (request: APIRequestContext) => async (<%= h.params(opData.params.pathParams, opData.params.queryParams) %> options?: GetRequestOptions<'<%= opData.method %>'>)<%- h.responseTypePromise(opData.responses) %> => {
 				<%- h.paramValidation(opData) %>
             	<%- h.paramsDestructure(opData) %>
-				try {
-					const res = await request.<%= opData.method %>(<%- h.pathToTemplateLiteral(opData.path) %>, {
-						...defaultOptions,
-						...options,
-						<%- h.queryPlaywright(opData.params.queryParams) %>
-					});
-					<%- h.okResponsesPlaywright(opData.responses) %>
-				} catch(e) {
-					<%- h.errorResponses(opData.responses) %>
-				}
+
+				const res = await request.<%= opData.method %>(<%- h.pathToTemplateLiteral(opData.path) %>, {
+					...defaultOptions,
+					...options,
+					<%- h.queryPlaywright(opData.params.queryParams) %>
+				});
+				const resBody = (await res.body()).toString();
+				<%- h.responsesPlaywright(opData.responses) %>
 
 				invariant(false)
 			}
@@ -122,17 +121,14 @@ export interface ApiResponse<T> extends Pick<Response, 'url'> {
 				<%- h.paramValidation(opData) %>
 				<%- h.paramsDestructure(opData) %>
 
-				try {
-					const res = await request.<%= opData.method %>(<%- h.pathToTemplateLiteral(opData.path) %>, {
-						...defaultOptions,
-						...options,
-						<%- h.queryPlaywright(opData.params.queryParams) %>
-						<%= h.payloadPlaywright(opData.requestBody) %>
-					});
-					<%- h.okResponsesPlaywright(opData.responses) %>
-				} catch(e) {
-					<%- h.errorResponses(opData.responses) %>
-				}
+				const res = await request.<%= opData.method %>(<%- h.pathToTemplateLiteral(opData.path) %>, {
+					...defaultOptions,
+					...options,
+					<%- h.queryPlaywright(opData.params.queryParams) %>
+					<%= h.payloadPlaywright(opData.requestBody) %>
+				});
+				const resBody = (await res.body()).toString();
+				<%- h.responsesPlaywright(opData.responses) %>
 
 				invariant(false)
         	}
@@ -142,37 +138,24 @@ export interface ApiResponse<T> extends Pick<Response, 'url'> {
 export class <%- className %> {
 	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 	private operations: Map<string, any>;
-	private request: APIRequestContext;
 
-    <% Object.entries(operations).forEach(([name, opData]) => { %>
+	<% Object.entries(operations).forEach(([name, opData]) => { %>
 		<%= h.opDescription(opData) %>
-        declare <%- name %>: ReturnType<typeof <%- name %>>;
+       public <%- name %>: ReturnType<typeof <%- name %>>;
     <% }) %>
+
 	constructor(
 		request: APIRequestContext,
 	) {
-		this.request = request;
 		this.operations = new Map();
 
  <% Object.entries(operations).forEach(([name, opData]) => { %>
-        this.operations.set("<%- name %>", <%- name %>);
+        //this.operations.set("<%- name %>", <%- name %>);
+		this.<%- name %> = <%- name %>(request)
     <% }) %>
 		
 
-		// eslint-disable-next-line
-		// biome-ignore lint/correctness/noConstructorReturn: <explanation>
-		return new Proxy(this, {
-			get(target, name: string) {
-				// eslint-disable-next-line
-				// biome-ignore lint/suspicious/noPrototypeBuiltins: <explanation>
-				if (target.hasOwnProperty(name)) {
-					//@ts-ignore
-					return target[name];
-				}
-
-				return target.operations.get(name)(this.request);
-			},
-		});
+		
 	}
 
 
