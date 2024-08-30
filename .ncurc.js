@@ -1,6 +1,6 @@
 module.exports = {
 	upgrade: true,
-	reject: [],
+	reject: ["@tanstack/react-query"],
 	root: true,
 	//workspaces: true
 };

@@ -10,22 +10,22 @@
 	],
 	"dependencies": {
 		"@apidevtools/swagger-parser": "^10.1.0",
-		"commander": "^11.0.0",
+		"commander": "^12.1.0",
 		"enquirer": "^2.4.1",
 		"hygen": "^6.2.11",
-		"json-schema-to-zod": "^1.1.1",
-		"openapi-zod-client": "^1.10.7"
+		"json-schema-to-zod": "^2.4.0",
+		"openapi-zod-client": "^1.18.2"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^1.8.3",
 		"@playwright/test": "^1.46.1",
-		"@tanstack/react-query": "^4.36.1",
-		"@types/node": "^20.5.1",
+		"@tanstack/react-query": "4.36.1",
+		"@types/node": "^22.5.1",
 		"@types/qs": "^6.9.15",
-		"del-cli": "^5.0.0",
-		"esbuild": "^0.19.2",
+		"del-cli": "^5.1.0",
+		"esbuild": "^0.23.1",
 		"qs": "^6.13.0",
-		"ts-node": "^10.9.1",
+		"ts-node": "^10.9.2",
 		"typescript": "^5.5.4",
 		"wretch": "^2.9.0"
 	},
