@@ -189,7 +189,11 @@ function processResponsesPlaywright(responses) {
 		code += "switch(res.status()) {\n";
 
 		for (const [resCode, response] of responses) {
+			if(resCode === "default") {
+				code += "default: {\n // TODO: fix the response in controller :)\n";
+			} else {
 			code += `case ${resCode}: {\n`;
+			}
 
 			const validation = map[resCode];
 

@@ -150,7 +150,6 @@ export class <%- className %> {
 		this.operations = new Map();
 
  <% Object.entries(operations).forEach(([name, opData]) => { %>
-        //this.operations.set("<%- name %>", <%- name %>);
 		this.<%- name %> = <%- name %>(request)
     <% }) %>
 		
