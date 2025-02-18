@@ -13,7 +13,8 @@
 			},
 			"correctness": {
 				"all": true,
-				"noUnusedVariables": "warn"
+				"noUnusedVariables": "warn",
+				"noUnusedImports": "error"
 			},
 			"security": {
 				"recommended": true,
