@@ -31,14 +31,14 @@ tasks:
 
     fixtures:
         cmds:
-            - curl -o fixtures/api.json https://raw.githubusercontent.com/OAI/OpenAPI-Specification/main/examples/v2.0/json/petstore.json
+            - curl -o fixtures/api.json https://raw.githubusercontent.com/OAI/learn.openapis.org/refs/heads/main/examples/v2.0/json/petstore-expanded.json
             - npx biome format --write fixtures/api.json
 
     run:
         cmds:
-            - npx del out/petsClientFull.ts
-            - node --experimental-strip-types src/bin.ts fixtures/api.json out -n petsClientFull
-            - npx biome format --write out/petsClientFull.ts
+            - bun del out/petsClientFull.ts
+            - bun src/bin.ts fixtures/api.json out -n petsClientFull
+            - bun biome format --write out/petsClientFull.ts
 
     run-pw:
         cmds:

@@ -1,22 +1,23 @@
 ---
 to: <%= outDir %>
 ---
-import wretch, {WretchError} from "wretch";
+import wretch, { type WretchError } from "wretch";
 import QueryStringAddon from "wretch/addons/queryString";
 import * as z from "zod";
 import qs from "qs";
 import {
 	useQuery,
-	UseQueryOptions,
-	UseQueryResult as UseBaseQueryResult,
+	type UseQueryOptions,
+	type UseQueryResult as UseBaseQueryResult,
 	useMutation,
-	UseMutationOptions,
+	type UseMutationOptions,
 	useInfiniteQuery,
-	UseInfiniteQueryOptions,
-	UseInfiniteQueryResult as UseBaseInfiniteQueryResult,
-	QueryClient,
-	QueryFunction,
-	QueryKey
+	type UseInfiniteQueryOptions,
+	type UseInfiniteQueryResult as UseBaseInfiniteQueryResult,
+	type QueryClient,
+	type QueryFunction,
+	type QueryKey,
+	type DefaultError
 } from "@tanstack/react-query";
 
 const isProduction: boolean = process.env.NODE_ENV === 'production';
@@ -72,12 +73,12 @@ export interface ApiResponse<T> extends Pick<Response, 'headers' | 'url'> {
 	status: number;
 }
 
-type UseQueryResult<TData = unknown, TError = unknown> = UseBaseQueryResult<TData, TError> & {
+type UseQueryResult<TData = unknown, TError = DefaultError> = UseBaseQueryResult<TData, TError> & {
 	key: QueryKey
 	invalidate: () => Promise<void>
 }
 
-type UseInfiniteQueryResult<TData = unknown, TError = unknown> = UseBaseInfiniteQueryResult<TData, TError> & {
+type UseInfiniteQueryResult<TData = unknown, TError = DefaultError> = UseBaseInfiniteQueryResult<TData, TError> & {
 	key: QueryKey
 	invalidate: () => Promise<void>
 }
@@ -156,7 +157,10 @@ type UseInfiniteQueryResult<TData = unknown, TError = unknown> = UseBaseInfinite
 			return {  
 				mutation,
 				useMutation: (options?: Omit<UseMutationOptions<<%- h.responseTypeUseMutation(opData.responses) %>, <%- h.TError(opData.responses) %><% if (h.args(opData.params.pathParams, opData.params.queryParams, opData.requestBody)) { %>, <%= h.args(opData.params.pathParams, opData.params.queryParams, opData.requestBody) %><% } %>>, 'mutationFn'>) => {
-					return useMutation<<%- h.responseTypeUseMutation(opData.responses) %>, <%- h.TError(opData.responses) %><% if (h.args(opData.params.pathParams, opData.params.queryParams, opData.requestBody)) { %>, <%= h.args(opData.params.pathParams, opData.params.queryParams, opData.requestBody) %><% } %>>(mutation, options || {});
+					return useMutation({
+				mutationFn: mutation,
+				...options
+			});
 				}
     		}
 		};

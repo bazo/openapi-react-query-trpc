@@ -1,7 +1,7 @@
 {
 	"name": "@bazo/openapi-react-query-trpc",
 	"bin": "src/bin.js",
-	"version": "1.5.2",
+	"version": "2.0.0",
 	"scripts": {
 		"prepublish": "task build"
 	},
@@ -9,25 +9,25 @@
 		"dist/**/*"
 	],
 	"dependencies": {
-		"@apidevtools/swagger-parser": "^10.1.0",
-		"commander": "^12.1.0",
+		"@apidevtools/swagger-parser": "^10.1.1",
+		"commander": "^13.1.0",
 		"enquirer": "^2.4.1",
 		"hygen": "^6.2.11",
-		"json-schema-to-zod": "^2.4.0",
-		"openapi-zod-client": "^1.18.2"
+		"json-schema-to-zod": "^2.6.0",
+		"openapi-zod-client": "^1.18.3"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "^1.8.3",
-		"@playwright/test": "^1.46.1",
-		"@tanstack/react-query": "4.36.1",
-		"@types/node": "^22.5.1",
-		"@types/qs": "^6.9.15",
-		"del-cli": "^5.1.0",
-		"esbuild": "^0.23.1",
-		"qs": "^6.13.0",
+		"@biomejs/biome": "^1.9.4",
+		"@playwright/test": "^1.50.1",
+		"@tanstack/react-query": "5.66.6",
+		"@types/node": "^22.13.4",
+		"@types/qs": "^6.9.18",
+		"del-cli": "^6.0.0",
+		"esbuild": "^0.25.0",
+		"qs": "^6.14.0",
 		"ts-node": "^10.9.2",
-		"typescript": "^5.5.4",
-		"wretch": "^2.9.0"
+		"typescript": "^5.7.3",
+		"wretch": "^2.11.0"
 	},
 	"publishConfig": {
 		"registry": "https://registry.npmjs.org/"

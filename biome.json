@@ -5,7 +5,8 @@
 		"rules": {
 			"all": true,
 			"nursery": {
-				"recommended": true
+				"recommended": true,
+				"useConsistentMemberAccessibility": "off"
 			},
 			"complexity": {
 				"recommended": true
@@ -20,7 +21,9 @@
 			},
 			"style": {
 				"recommended": true,
-				"noImplicitBoolean": "off"
+				"noImplicitBoolean": "off",
+				"useNamingConvention": "off",
+				"useDefaultSwitchClause": "off"
 			},
 			"suspicious": {
 				"recommended": true,
