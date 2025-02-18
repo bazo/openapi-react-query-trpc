@@ -118,23 +118,25 @@ type UseInfiniteQueryResult<TData = unknown, TError = DefaultError> = UseBaseInf
 			const query: QueryFunction<<%- h.responseType(opData.responses) %>> = async ({meta, queryKey, pageParam, signal}) => {
 				return queryFn(<%- h.paramsArg(opData) %> signal);
 			}
-			const invalidate = () => queryClient.invalidateQueries(key);
-			const queryResult = useQuery<<%- h.responseType(opData.responses) %>, <%- h.TError(opData.responses) %>>(key, query, options || {}) as UseQueryResult<<%- h.responseType(opData.responses) %>, <%- h.TError(opData.responses) %>>;
+			const invalidate = () => queryClient.invalidateQueries({queryKey: key});
+			const queryResult = useQuery<<%- h.responseType(opData.responses) %>, <%- h.TError(opData.responses) %>>({ ...(options || {}), queryKey: key, queryFn: query }) as UseQueryResult<<%- h.responseType(opData.responses) %>, <%- h.TError(opData.responses) %>>;
 			queryResult.invalidate = invalidate;
 			queryResult.key = key;
 			return queryResult;
 		},
+		/*
 		useInfiniteQuery: (<%= h.params(opData.params.pathParams, opData.params.queryParams) %> options?: Omit<UseInfiniteQueryOptions<<%- h.responseType(opData.responses) %>, <%- h.TError(opData.responses) %>>, 'queryFn' >): UseInfiniteQueryResult<<%- h.responseType(opData.responses) %>, <%- h.TError(opData.responses) %>> => {
 			const key = <%- h.queryKey(name, opData) %>;
 			const query: QueryFunction<<%- h.responseType(opData.responses) %>> = async ({meta, queryKey, pageParam, signal}) => {
 				return queryFn(<%- h.paramsArg(opData) %> signal);
 			}
-			const invalidate = () => queryClient.invalidateQueries(key);
-			const queryResult = useInfiniteQuery<<%- h.responseType(opData.responses) %>, <%- h.TError(opData.responses) %>>(key, query, options || {}) as UseInfiniteQueryResult<<%- h.responseType(opData.responses) %>, <%- h.TError(opData.responses) %>>;
+			const invalidate = () => queryClient.invalidateQueries({queryKey: key});
+			const queryResult = useInfiniteQuery<<%- h.responseType(opData.responses) %>, <%- h.TError(opData.responses) %>>({ ...(options || {}), queryKey: key, queryFn: query }) as UseInfiniteQueryResult<<%- h.responseType(opData.responses) %>, <%- h.TError(opData.responses) %>>;
 			queryResult.invalidate = invalidate;
 			queryResult.key = key;
 			return queryResult;
 		},
+		*/
     }}
 	<%# !!MUTATIONS!! %>
 	<% } else { %>
@@ -158,8 +160,9 @@ type UseInfiniteQueryResult<TData = unknown, TError = DefaultError> = UseBaseInf
 				mutation,
 				useMutation: (options?: Omit<UseMutationOptions<<%- h.responseTypeUseMutation(opData.responses) %>, <%- h.TError(opData.responses) %><% if (h.args(opData.params.pathParams, opData.params.queryParams, opData.requestBody)) { %>, <%= h.args(opData.params.pathParams, opData.params.queryParams, opData.requestBody) %><% } %>>, 'mutationFn'>) => {
 					return useMutation({
+					...options
 				mutationFn: mutation,
-				...options
+				
 			});
 				}
     		}
