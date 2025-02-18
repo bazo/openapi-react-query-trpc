@@ -5,6 +5,8 @@ const path = require("path");
 const { Command } = require("commander");
 const enquirer = require("enquirer");
 const execa = require("execa");
+//import { Biome, Distribution } from "@biomejs/js-api";
+//import fs from "fs";
 
 const defaultTemplates = path.join(__dirname, "_templates");
 
@@ -16,9 +18,36 @@ program
 	.argument("<output-dir>", "where to save the client")
 	.requiredOption("-n, --name <name>", "client class name")
 	.option("-m, --mode <mode>", "full or playwright", "full")
-	.action((file: string, outDir: string, opts: Record<string, string>, command: typeof Command) => {
+	.action(async (file: string, outDir: string, opts: Record<string, string>, command: typeof Command) => {
 		console.log(`generating ${opts.name} in ${opts.mode} mode from ${file}...`);
-		runRunner(file, outDir);
+		const { success, actions } = await runRunner(file, outDir);
+		if (success) {
+			console.log(`✅ ${file} generated.`);
+
+			// const filePath = actions[0].subject;
+			// const code = await fs.readFileSync(filePath, "utf8");
+
+			// const b = await Biome.create({
+			// 	distribution: Distribution.NODE,
+			// });
+
+			// // Step 2: Run Biome's linter with autofix to remove unused imports & variables
+			// const lintResult = b.lintContent(code, {
+			// 	filePath,
+			// 	fixFileMode: "SafeAndUnsafeFixes",
+			// });
+
+			// const formatResult = b.formatContent(lintResult.content, {
+			// 	filePath,
+
+			// })
+
+			// console.log({formatResult})
+
+			// fs.writeFileSync(filePath, lintResult.content, "utf8");
+
+			// console.log(`✅ Cleaned and formatted: ${filePath}`);
+		}
 	});
 
 program.parse(process.argv);
