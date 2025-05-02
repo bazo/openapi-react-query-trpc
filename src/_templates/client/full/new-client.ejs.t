@@ -1,22 +1,22 @@
 ---
 to: <%= outDir %>
 ---
-import wretch, {WretchError} from "wretch";
+import wretch from "wretch";
 import QueryStringAddon from "wretch/addons/queryString";
 import * as z from "zod";
 import qs from "qs";
 import {
 	useQuery,
-	UseQueryOptions,
-	UseQueryResult as UseBaseQueryResult,
+	type UseQueryOptions,
+	type UseQueryResult as UseBaseQueryResult,
 	useMutation,
-	UseMutationOptions,
+	type UseMutationOptions,
 	useInfiniteQuery,
-	UseInfiniteQueryOptions,
-	UseInfiniteQueryResult as UseBaseInfiniteQueryResult,
+	type UseInfiniteQueryOptions,
+	type UseInfiniteQueryResult as UseBaseInfiniteQueryResult,
 	QueryClient,
-	QueryFunction,
-	QueryKey
+	type QueryFunction,
+	type QueryKey,
 } from "@tanstack/react-query";
 
 const isProduction: boolean = process.env.NODE_ENV === 'production';
@@ -52,6 +52,8 @@ function invariant(
   const value: string = provided ? `${invariantPrefix}: ${provided}` : invariantPrefix;
   throw new Error(value);
 }
+
+type WretchError = typeof wretch.WretchError
 
 function error(err: unknown): WretchError {
 	return err as WretchError
