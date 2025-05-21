@@ -65,11 +65,11 @@ tasks:
 
     build:
         cmds:
-            - npx del dist
-            - npx esbuild src/_templates/client/full/index.ts --bundle --platform=node --outdir=dist/_templates/client/full/
-            - npx esbuild src/_templates/client/playwright/index.ts --bundle --platform=node --outdir=dist/_templates/client/playwright/
-            - npx esbuild src/.hygen.js --bundle --platform=node --outdir=dist
-            - npx esbuild src/bin.ts --bundle --platform=node --outdir=dist
+            - bun del dist
+            - bun esbuild src/_templates/client/full/index.ts --bundle --platform=node --outdir=dist/_templates/client/full/
+            - bun esbuild src/_templates/client/playwright/index.ts --bundle --platform=node --outdir=dist/_templates/client/playwright/
+            - bun esbuild src/.hygen.js --bundle --platform=node --outdir=dist
+            - bun esbuild src/bin.ts --bundle --platform=node --outdir=dist
             - cp src/_templates/client/full/new-client.ejs.t dist/_templates/client/full/new-client.ejs.t 
             - cp src/_templates/client/playwright/new-client.ejs.t dist/_templates/client/playwright/new-client.ejs.t 
             - cp src/opsSchemaTemplate.hbs dist/_templates/client/full/opsSchemaTemplate.hbs
@@ -83,5 +83,5 @@ tasks:
         dir: dist
         cmds:
             - task: build
-            - npm publish --access=public
+            - bun publish --access=public
             

@@ -160,7 +160,7 @@ type UseInfiniteQueryResult<TData = unknown, TError = DefaultError> = UseBaseInf
 				mutation,
 				useMutation: (options?: Omit<UseMutationOptions<<%- h.responseTypeUseMutation(opData.responses) %>, <%- h.TError(opData.responses) %><% if (h.args(opData.params.pathParams, opData.params.queryParams, opData.requestBody)) { %>, <%= h.args(opData.params.pathParams, opData.params.queryParams, opData.requestBody) %><% } %>>, 'mutationFn'>) => {
 					return useMutation({
-					...options
+					...options,
 				mutationFn: mutation,
 				
 			});
